@@ -9,7 +9,7 @@ awk '{print $2}')
 check_battery=${battery_status%\%}
 
 if [[ $check_battery -le 21 ]]; then
-    battery_status+=" VERY LOW BATTERY!"
+    battery_status+=" LOW BATTERY!"
 elif [[ $check_battery -le 40 ]]; then
 	 battery_status+=" low battery."	
 elif [[ $check_battery -le 60 ]]; then
@@ -19,13 +19,19 @@ elif [[ $check_battery -le 100 ]]; then
 fi
 
 volume=$(pactl get-sink-volume @DEFAULT_SINK@ | grep -oP '\d+(?=\%)' | awk '{sum+=$1} END {print sum/NR}')
-name=$(whoami)
 light=$(light -G)
 
-not_rounded_memory_usage=$(free -m -h | grep -i 'Mem:' | awk '{usage=($3/$2)*100} END {print usage}')
-memory_usage=$(printf "%.2f" $not_rounded_memory_usage)
+used_memory=$(free -m -h | grep -i 'Mem:' | awk '{ print $3 }')
+total_memory=$(free -m -h | grep -i 'Mem: ' | awk '{ print $2 }')
+free_memory=$(free -m -h | grep -i 'Mem: ' | awk '{ print $4 }')
+
+
+
+#cpu_temp=$(sensors | grep "Core" | awk '{sum += $3} END {print sum/NR}')
+#watch -n 10 'sensors | grep "Core" | awk '\''{sum += $3} END {print sum/NR}'\'''
+#cpu_temp+=°C
 
 total_disk_space=$(df -H | grep -i '/dev/nvme0n1p7' | awk '{ print $2 }')
 used_disk_space=$(df -H | grep -i '/dev/nvme0n1p7' | awk '{ print $3 }')
 
-echo  ▕ total:$total_disk_space used:$used_disk_space▕ $memory_usage% memory usage▕ ${light%.*}% brightness▕ $volume% volume▕ $date_formatted▕ $battery_status▕  
+echo ▕ DISK SPACE total:$total_disk_space used:$used_disk_space▕ MEMORY USAGE total: $total_memory used: $used_memory free: $free_memory▕ ${light%.*}% brightness▕ $volume% volume▕ $date_formatted▕ $battery_status▕  
