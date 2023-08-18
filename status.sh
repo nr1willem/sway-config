@@ -25,13 +25,8 @@ used_memory=$(free -m -h | grep -i 'Mem:' | awk '{ print $3 }')
 total_memory=$(free -m -h | grep -i 'Mem: ' | awk '{ print $2 }')
 free_memory=$(free -m -h | grep -i 'Mem: ' | awk '{ print $4 }')
 
-
-
-#cpu_temp=$(sensors | grep "Core" | awk '{sum += $3} END {print sum/NR}')
-#watch -n 10 'sensors | grep "Core" | awk '\''{sum += $3} END {print sum/NR}'\'''
-#cpu_temp+=°C
-
 total_disk_space=$(df -H | grep -i '/dev/nvme0n1p7' | awk '{ print $2 }')
 used_disk_space=$(df -H | grep -i '/dev/nvme0n1p7' | awk '{ print $3 }')
+free_disk_space=$(df -H | grep -i '/dev/nvme0n1p7' | awk '{ print $4 }')
 
-echo ▕ DISK SPACE total:$total_disk_space used:$used_disk_space▕ MEMORY USAGE total: $total_memory used: $used_memory free: $free_memory▕ ${light%.*}% brightness▕ $volume% volume▕ $date_formatted▕ $battery_status▕  
+echo ▕ DISK SPACE total:$total_disk_space used:$used_disk_space free: $free_disk_space▕ MEMORY USAGE total: $total_memory used: $used_memory free: $free_memory▕ ${light%.*}% brightness▕ $volume% volume▕ $date_formatted▕ $battery_status▕  
